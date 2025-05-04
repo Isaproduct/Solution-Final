@@ -1,7 +1,5 @@
 package entities;
 
-import main.Geme;
-
 public class Spider extends Enemy {
 
     private int attackBoxOffsetX;
