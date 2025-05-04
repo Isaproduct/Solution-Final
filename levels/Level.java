@@ -31,4 +31,21 @@ public class Level {
     private int maxTilesOffset;
     private int maxLvlOffsetx;
     private Point playerSpawn;
+    public Level(BufferedImage img)
+    {
+        this.img=img;
+        createLevelData();
+        createEnemies();
+        createPotions();
+        createContainers();
+        createSpikes();
+        createCannons();
+        calcLvlOffsets();
+        calcPlayerSpawn();
+
+    }
+    private void createCannons() {
+        cannons=HelpMethods.GetCannon(img);
+
+    }
 }
