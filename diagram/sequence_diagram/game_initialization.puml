@@ -1,0 +1,16 @@
+@startuml
+title Menu Interaction Sequence
+
+actor User
+participant GPanel
+participant MouseInputs
+participant Menu
+participant Geme
+participant Gamestate
+
+User -> GPanel : mouseClick()
+GPanel -> MouseInputs : handleClick()
+MouseInputs -> Menu : mouseClicked()
+Menu -> Geme : setGameState(PLAYING)
+Geme -> Gamestate : updateState(PLAYING)
+@enduml
