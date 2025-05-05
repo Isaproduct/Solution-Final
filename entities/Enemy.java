@@ -1,52 +1,143 @@
 package entities;
 
+import static utilz.Constants.*;
+import static utilz.Constants.EnemyConstants.*;
+
+import java.awt.geom.Rectangle2D;
+
+import static utilz.Constants.Directions.*;
+import static utilz.HelpMethods.*;
+
 import main.Geme;
-public abstract class Enemy extends Entity{
 
-    public Enemy() {
+public abstract class Enemy extends Entity {
+    protected int spiderType;
+    protected boolean firstUpdate = true;
+
+    protected float walkSpeed = 0.35f * Geme.SCALE;
+    protected int walkDir = left;
+    protected int tileY;
+    protected float attackDistance = Geme.TILES_SIZE;
+    protected boolean active = true;
+    protected boolean attackChecked;
+
+    public Spider(float x, float y, int width, int height, int spiderType) {
+        super(x, y, width, height);
+        this.spiderType = spiderType;
+        maxHealth = GetMaxHealth(spiderType);
+        currentHealth = maxHealth;
+        walkSpeed = (float) (Geme.SCALE * 0.4);
     }
 
-    protected void firstUpdateCheck() {
+    protected void firstUpdateCheck(int[][] lvlData) {
+        if (!IsEntityOnFloor(hitbox, lvlData))
+            inAir = true;
+        firstUpdate = false;
     }
 
-    protected void updateInAir() {
+    protected void updateInAir(int[][] lvlData) {
+        if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+            hitbox.y += airSpeed;
+            airSpeed += GRAVITY;
+        } else {
+            inAir = false;
+            hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+            tileY = (int) (hitbox.y / Geme.TILES_SIZE);
+        }
     }
 
-    protected void move() {
+    protected void move(int[][] lvlData) {
+        float xSpeed = 0;
+        if (walkDir == left)
+            xSpeed = -walkSpeed;
+        else
+            xSpeed = walkSpeed;
+
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
+            if (IsFloor(hitbox, xSpeed, lvlData)) {
+                hitbox.x += xSpeed;
+                return;
+            }
+        changeWalkDir();
     }
 
-    protected void turnTowardPlayer() {
+    protected void turnTowardPlayer(Player player) {
+        if (player.hitbox.x > hitbox.x)
+            walkDir = right;
+        else
+            walkDir = left;
     }
 
-    protected boolean canSeePlayer() {
+    protected boolean canSeePlayer(int[][] lvlData, Player player) {
+        int playerTileY = (int) player.getHitbox().y / Geme.TILES_SIZE;
+        if (playerTileY == tileY)
+            if (isPlayerInRange(player))
+                if (IsSightClear(lvlData, hitbox, player.hitbox, tileY)) {
+                    return true;
+                }
+        return false;
     }
 
-    protected boolean isPlayerInRange() {
+    protected boolean isPlayerInRange(Player player) {
+        int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
+        return absValue <= attackDistance * 5;
     }
 
-    protected boolean isPlayerCloseForAttack() {
+    protected boolean isPlayerCloseForAttack(Player player) {
+        int absValue = (int) Math.abs(player.hitbox.x - hitbox.x);
+        return absValue <= attackDistance;
     }
 
-    protected void newState() {
+    protected void newState(int spiderState) {
+        this.state = spiderState;
+        aniTick = 0;
+        aniIndex = 0;
     }
 
-    public void hurt() {
+    public void hurt(int amount) {
+        currentHealth -= amount;
+        if (currentHealth <= 0)
+            newState(DEAD);
+        else
+            newState(HIT);
     }
 
-    protected void checkEnemyHit() {
+    protected void checkSpiderHit(Rectangle2D.Float attackBox, Player player) {
+        if (attackBox.intersects(player.hitbox))
+            player.changeHealth(-GetEnemyDmg(spiderType));
+        attackChecked = true;
     }
 
     protected void updateAnimationTick() {
+        aniTick++;
+        if (aniTick >= ANI_SPEED) {
+            aniTick = 0;
+            aniIndex++;
+            if (aniIndex >= getSpriteAmount(spiderType, state)) {
+                aniIndex = 0;
+                switch (state) {
+                    case ATTACK, HIT -> state = IDLE;
+                    case DEAD -> active = false;
+                }
+            }
+        }
     }
 
     protected void changeWalkDir() {
+        walkDir = (walkDir == left) ? right : left;
     }
 
-    public void resetEnemy(){
+    public void resetSpider() {
+        hitbox.x = x;
+        hitbox.y = y;
+        firstUpdate = true;
+        currentHealth = maxHealth;
+        newState(IDLE);
+        active = true;
+        airSpeed = 0;
     }
 
-    public boolean isActive()
-    {
+    public boolean isActive() {
         return active;
     }
 }
