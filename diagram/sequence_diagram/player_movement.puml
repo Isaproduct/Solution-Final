@@ -1,0 +1,16 @@
+@startuml
+title Attack and Enemy Collision Sequence
+
+actor User
+participant KeyboardInputs
+participant Playing
+participant Player
+participant EnemyManager
+participant Enemy
+
+User -> KeyboardInputs : keyPressed(SPACE)
+KeyboardInputs -> Playing : handleAttack()
+Playing -> Player : attack()
+Player -> EnemyManager : checkHit()
+EnemyManager -> Enemy : damage()
+@enduml
