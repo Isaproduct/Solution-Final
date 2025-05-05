@@ -1,0 +1,217 @@
+@startuml
+title Java-Platformer – Полная диаграмма классов
+
+' === ПАКЕТ main ===
+package main {
+  class MainClass {
+    + main(args: String[]): void
+  }
+  class Geme {
+    - gpanel: Gpanel
+    - gwin: GWin
+    - menu: gamestates.Menu
+    - playing: gamestates.Playing
+    - gameOptions: gamestates.GameOptions
+    + run(): void
+  }
+  class Gpanel {
+    - geme: Geme
+    + gameLoop(): void
+  }
+  class GWin {
+    - gpanel: Gpanel
+    + GWin(panel: Gpanel)
+  }
+
+  MainClass --> Geme
+  Geme *-- Gpanel
+  Geme *-- GWin
+}
+
+' === ПАКЕТ gamestates ===
+package gamestates {
+  enum Gamestate {
+    MENU
+    PLAYING
+    OPTIONS
+    QUIT
+  }
+
+  interface Statemethods {
+    + update(): void
+    + draw(g: Graphics): void
+    + mouseClicked(e: MouseEvent): void
+    + mousePressed(e: MouseEvent): void
+    + mouseReleased(e: MouseEvent): void
+    + mouseMoved(e: MouseEvent): void
+    + keyPressed(e: KeyEvent): void
+    + keyReleased(e: KeyEvent): void
+  }
+
+  abstract class State {
+    # geme: main.Geme
+    + isIn(e: MouseEvent, mb: ui.MenuButton): boolean
+    + getGeme(): main.Geme
+  }
+
+  class Menu {
+    - buttons: ui.MenuButton[]
+    + update(): void
+    + draw(g: Graphics): void
+    + mouseClicked(e: MouseEvent): void
+    + mouseMoved(e: MouseEvent): void
+  }
+
+  class Playing {
+    - player: entities.Player
+    - enemyManager: entities.EnemyManager
+    - levelManager: levels.LevelManager
+    - objectManager: objects.ObjectManager
+    + update(): void
+    + draw(g: Graphics): void
+  }
+
+  class GameOptions {
+    - audioOptions: ui.AudioOptions
+    - menuB: ui.PauseButton
+    - urmB: ui.UrmButton
+    + update(): void
+    + draw(g: Graphics): void
+  }
+
+  State <|-- Menu
+  State <|-- Playing
+  State <|-- GameOptions
+  Menu ..|> Statemethods
+  Playing ..|> Statemethods
+  GameOptions ..|> Statemethods
+}
+
+' === ПАКЕТ inputs ===
+package inputs {
+  class KeyInputs {
+    - gpanel: main.Gpanel
+    + keyPressed(e: KeyEvent): void
+    + keyReleased(e: KeyEvent): void
+  }
+  class MouseInputs {
+    - gpanel: main.Gpanel
+    + mouseClicked(e: MouseEvent): void
+    + mousePressed(e: MouseEvent): void
+    + mouseReleased(e: MouseEvent): void
+    + mouseMoved(e: MouseEvent): void
+    + mouseDragged(e: MouseEvent): void
+  }
+
+  KeyInputs ..|> KeyListener
+  MouseInputs ..|> MouseListener
+  MouseInputs ..|> MouseMotionListener
+}
+
+' === ПАКЕТ entities ===
+package entities {
+  abstract class Entity {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class Player extends Entity {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class Enemy extends Entity {
+    + update(): void
+    + draw(g: Graphics): void
+    + hurt(damage: int): void
+  }
+  class Crabby extends Enemy
+  class EnemyManager {
+    - enemies: List<Enemy>
+    + update(): void
+    + draw(g: Graphics): void
+  }
+
+  Player --|> Entity
+  Enemy --|> Entity
+  Crabby --|> Enemy
+  EnemyManager ..> Enemy
+}
+
+' === ПАКЕТ levels ===
+package levels {
+  class Level {
+    + load(): BufferedImage[]
+  }
+  class LevelManager {
+    - currentLevel: Level
+    + loadNextLevel(): void
+    + getCurrentLevel(): Level
+  }
+
+  LevelManager ..> Level
+}
+
+' === ПАКЕТ objects ===
+package objects {
+  abstract class GameObject {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class Cannon extends GameObject
+  class Spike extends GameObject
+  class Potion extends GameObject
+  class Projectile extends GameObject
+  class GameContainer extends GameObject
+  class ObjectManager {
+    - objects: List<GameObject>
+    + update(): void
+    + draw(g: Graphics): void
+  }
+
+  Cannon --|> GameObject
+  Spike --|> GameObject
+  Potion --|> GameObject
+  Projectile --|> GameObject
+  GameContainer --|> GameObject
+  ObjectManager ..> GameObject
+}
+
+' === ПАКЕТ ui ===
+package ui {
+  class AudioOptions {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class SoundButton {
+    + loadSoundImgs(): void
+  }
+  class MenuButton {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class PauseButton extends MenuButton
+  class UrmButton extends MenuButton
+  class PauseOverlay {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class GameOverOverlay {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+  class LevelCompletedOverlay {
+    + update(): void
+    + draw(g: Graphics): void
+  }
+
+  PauseButton --|> MenuButton
+  UrmButton --|> MenuButton
+}
+
+' === ПАКЕТ utilz ===
+package utilz {
+  class Constants
+  class HelpMethods
+  class LoadSave
+}
+
+@enduml
