@@ -31,15 +31,11 @@ public class Menu extends State implements Statemethods{
     }
 
     private void loadButtons() {
-        int x = Geme.GAME_WIDTH / 2;
-        int baseY = (int)(200 * Geme.SCALE);
-        int stepY = (int)(50 * Geme.SCALE);
+        buttons[0]=new MenuButton(Geme.GAME_WIDTH/2,(int)(150*Geme.SCALE), 0, Gamestate.PLAYING);
+        buttons[1]=new MenuButton(Geme.GAME_WIDTH/2,(int)(220*Geme.SCALE), 1, Gamestate.OPTIONS);
+        buttons[2]=new MenuButton(Geme.GAME_WIDTH/2,(int)(290*Geme.SCALE), 2, Gamestate.QUIT);
 
-        buttons[0] = new MenuButton(x, baseY + stepY * 0, 0, Gamestate.PLAYING);
-        buttons[1] = new MenuButton(x, baseY + stepY * 1, 1, Gamestate.OPTIONS);
-        buttons[2] = new MenuButton(x, baseY + stepY * 2, 2, Gamestate.QUIT);
     }
-
 
     @Override
     public void update() {
@@ -59,6 +55,7 @@ public class Menu extends State implements Statemethods{
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
     }
 
     @Override
