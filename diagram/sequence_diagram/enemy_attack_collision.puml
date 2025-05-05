@@ -1,0 +1,21 @@
+@startuml
+title Game Initialization Sequence
+
+actor User
+participant MainClass
+participant Geme
+participant GPanel
+participant GWin
+participant Menu
+participant Playing
+participant GameOptions
+
+User -> MainClass : start()
+MainClass -> Geme : new Geme()
+Geme -> GPanel : initClasses()
+Geme -> GWin : createWindow()
+Geme -> Menu : init()
+Geme -> Playing : init()
+Geme -> GameOptions : init()
+GPanel -> Geme : startGameLoop()
+@enduml
