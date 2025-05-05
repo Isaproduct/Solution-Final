@@ -1,0 +1,14 @@
+@startuml
+title Player Movement Sequence
+
+actor User
+participant KeyboardInputs
+participant Playing
+participant Player
+participant CollisionChecker
+
+User -> KeyboardInputs : keyPressed()
+KeyboardInputs -> Playing : handleInput()
+Playing -> Player : update()
+Player -> CollisionChecker : checkCollision()
+@enduml
