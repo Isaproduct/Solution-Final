@@ -1,6 +1,6 @@
 package entities;
 
-
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
@@ -27,14 +27,16 @@ public abstract class Entity {
         this.height=height;
     }
     protected void drawAttackBox(Graphics g, int lvlOffsetX) {
-
+        g.setColor(Color.BLACK);
+        g.drawRect((int)attackBox.x-lvlOffsetX, (int)attackBox.y, (int)attackBox.width, (int)attackBox.height);
     }
 
     protected void drawHitbox(Graphics g,int xLvlOffset) {
-
+        g.setColor(Color.PINK);
+        g.drawRect((int)hitbox.x-xLvlOffset, (int)hitbox.y, (int)hitbox.width, (int)hitbox.height);
     }
     protected void initHitbox(int width, int height) {
-
+        hitbox= new Rectangle2D.Float(x,y,(int)(width*Geme.SCALE),(int)(height*Geme.SCALE));
     }
     public Rectangle2D.Float getHitbox()
     {
