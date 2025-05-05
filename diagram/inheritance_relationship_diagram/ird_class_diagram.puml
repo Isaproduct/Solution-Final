@@ -1,0 +1,38 @@
+@startuml
+title IRD Class Diagram - Java Platformer
+
+' === Base Classes ===
+class Entity
+class GameObject
+class State
+interface Statemethods
+
+' === Game Core ===
+class Geme implements Runnable
+class Gpanel extends JPanel
+
+' === Inputs ===
+class KeyInputs implements KeyListener
+class MouseInputs implements MouseListener, MouseMotionListener
+
+' === Game States ===
+class GameOptions extends State implements Statemethods
+class Menu extends State implements Statemethods
+class Playing extends State implements Statemethods
+
+' === Entities ===
+class Player extends Entity
+class Enemy extends Entity
+class Crabby extends Enemy
+
+' === Objects ===
+class GameContainer extends GameObject
+class Potion extends GameObject
+class Cannon extends GameObject
+class Spike extends GameObject
+
+' === UI ===
+class SoundButton extends PauseButton
+class UrmButton extends PauseButton
+
+@enduml
