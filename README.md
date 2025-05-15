@@ -78,13 +78,7 @@ res/                  ← Sprites, sounds, and level files
 * **Ilimbaev Islam** — pixel art & overall visual style
 
 ---
+![image](https://github.com/user-attachments/assets/37439db0-ea03-4dc1-8b8a-7dec055e1bab)  ![image](https://github.com/user-attachments/assets/ceddfe90-bad3-4659-b291-f66a444c932f)
 
-## Future Plans
 
-* Add new enemy types and boss fights
-* Build a level-editor tool
-* Implement a character progression system
-* Optimize rendering and support multiple resolutions
-
----
 
