@@ -73,7 +73,7 @@ res/                  ← Sprites, sounds, and level files
 ## Team Roles
 
 * **Aisabek Akzhol** — movement mechanics & hero jump physics
-* **Faizulla Dinmukhammed** — enemy behavior & AI (`EnemyManager`)
+* **Faizulla Dinmukhammed** — enemy behavior
 * **Iken Ansar** — UI design & in-game visualization
 * **Ilimbaev Islam** — pixel art & overall visual style
 
